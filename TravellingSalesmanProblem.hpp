@@ -13,5 +13,7 @@ public:
 
 	void bruteForce();
 
+	void bruteForce_test();
+
 	void print();
 };

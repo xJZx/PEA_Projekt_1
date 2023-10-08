@@ -2,7 +2,7 @@
 //
 
 #include "TravellingSalesmanProblem.hpp"
-//#include "TravellingSalesmanProblemBenchmark.hpp"
+#include "TravellingSalesmanProblemBenchmark.hpp"
 #include <iostream>
 
 int main()
@@ -18,7 +18,7 @@ int main()
         if (mode == 1) {
             int creation = 0;
             std::cout << "Select how the graph will be created:\n";
-            std::cout << "1. Random\n";
+            std::cout << "1. Random (NOT WORKING YET)\n";
             std::cout << "2. From the file\n";
             std::cin >> creation;
             switch (creation) {
@@ -61,7 +61,7 @@ int main()
         else if (mode == 2) {
             int creation = 0;
             std::cout << "Select how the graph will be created:\n";
-            std::cout << "1. Random\n";
+            std::cout << "1. Random (NOT WORKING YET)\n";
             std::cout << "2. From the file\n";
             std::cin >> creation;
             switch (creation) {
@@ -88,10 +88,10 @@ int main()
                 std::cout << "Insert the filename: ";
                 std::cin >> filename;
                 std::cout << std::endl;
-                //TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(filename);
+                TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(filename);
                 //travellingSalesmanProblemBenchmark->print();
 
-                //delete travellingSalesmanProblemBenchmark;
+                delete travellingSalesmanProblemBenchmark;
             }
             break;
             }

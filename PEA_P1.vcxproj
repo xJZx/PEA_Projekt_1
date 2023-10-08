@@ -129,9 +129,11 @@
   <ItemGroup>
     <ClCompile Include="PEA_P1.cpp" />
     <ClCompile Include="TravellingSalesmanProblem.cpp" />
+    <ClCompile Include="TravellingSalesmanProblemBenchmark.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TravellingSalesmanProblem.hpp" />
+    <ClInclude Include="TravellingSalesmanProblemBenchmark.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="test.txt" />

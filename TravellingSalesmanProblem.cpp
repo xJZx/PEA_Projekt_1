@@ -149,6 +149,40 @@ void TravellingSalesmanProblem::bruteForce() {
     std::cout << "Best value: " << bestValue << std::endl;
 }
 
+void TravellingSalesmanProblem::bruteForce_test() {
+    // przyjmijmy, ¿e zaczynamy od wierzcho³ka 0
+    int source = 0;
+    int bestValue = INT_MAX;
+    int currentValue = 0;
+    // najlepsza sciezka zapamiêtana w tablicy wektorowej
+    std::vector<int> bestTrip;
+    // obecna sciezka zapamietana w t. wekt.
+    std::vector<int> trip;
+
+    // okreslenie domyslnej sciezki (wyjsciowej)
+    for (int i = 0; i < V; i++) {
+        trip.insert(trip.end(), i);
+    }
+
+    // okreslenie powrotu do punktu wyjscia dla domyslnej sciezki
+    trip.insert(trip.end(), 0);
+
+    // next_permutation z biblioteki <algorithm>, pozwala rearan¿owaæ elementy tab. wekt. tak aby uzyskaæ wszystkie mo¿liwe jej permutacje
+    while (std::next_permutation(trip.begin() + 1, trip.end() - 1)) {
+        currentValue = 0;
+        // dodawanie wag krawêdzi grafu do ca³kowitego kosztu obecnej œcie¿ki
+        for (int i = 0; i < V; i++) {
+            currentValue += array[trip[i]][trip[i + 1]];
+        }
+
+        // jeœli obecna permutacja okaza³a siê korzystniejsza, to jest zapisywana jako owa
+        if (currentValue < bestValue) {
+            bestValue = currentValue;
+            bestTrip = trip;
+        }
+    }
+}
+
 
 void TravellingSalesmanProblem::print()
 {
