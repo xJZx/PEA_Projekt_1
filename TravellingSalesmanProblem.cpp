@@ -142,7 +142,7 @@ void TravellingSalesmanProblem::bruteForce() {
     // V + 1, aby pokazaæ ¿e komiwoja¿er dotar³ do domku
     std::cout << "Best trip: ";
     for (int i = 0; i < V + 1; i++) {
-        std::cout << bestTrip[i];
+        std::cout << bestTrip[i] << " ";
     }
 
     std::cout << std::endl;
