@@ -192,10 +192,12 @@ void TravellingSalesmanProblem::littleAlgorithm() {
 
     int min = INT_MAX;
 
+    int lowerBound = 0;
+
     for (int row = 0; row < V; row++) {
         for (int column = 0; column < V; column++) {
             // szukamy minimum dla RZÊDU
-            if (array[row][column] < min) {
+            if (array[row][column] < min && row != column) {
                 min = array[row][column];
             }
         }
@@ -206,20 +208,22 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         min = INT_MAX;
     }
 
-    // 1. krok do stworzenia C'
+    // 1. krok do stworzenia C' - odjêcie od C wspó³czynnika a
     for (int row = 0; row < V; row++) {
         for (int column = 0; column < V; column++) {
             // Cij - ai
             if (row != column) {
-                array[row][column] - aFactor[row];
+                array[row][column] -= aFactor.at(row);
             }
         }
     }
 
+    print();
+
     for (int column = 0; column < V; column++) {
         for (int row = 0; row < V; row++) {
             // szukamy minimum dla KOLUMNY
-            if (array[row][column] < min) {
+            if (array[row][column] < min && row != column) {
                 min = array[row][column];
             }
         }
@@ -229,6 +233,27 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         // ponowne ustalenie minimum
         min = INT_MAX;
     }
+
+    // 2. krok do stworzenia C' - odjêcie od C wspó³czynnika b
+    for (int column = 0; column < V; column++) {
+        for (int row = 0; row < V; row++) {
+            // Cij - bi
+            if (column != row) {
+                array[column][row] -= bFactor.at(row);
+            }
+        }
+    }
+
+    print();
+
+    // obliczenie dolnego oszacowania dla wszystkich rozwi¹zañ
+    for (int i = 0; i < V; i++) {
+        lowerBound += aFactor[i] + bFactor[i];
+    }
+
+    std::cout << "Lower bound on all tours: " << lowerBound << std::endl;
+
+
 }
 
 
