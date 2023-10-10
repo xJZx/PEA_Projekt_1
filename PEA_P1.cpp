@@ -37,6 +37,7 @@ int main()
                 TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(v, low, high);
                 travellingSalesmanProblem->print();
                 travellingSalesmanProblem->bruteForce();
+                travellingSalesmanProblem->littleAlgorithm();
 
                 delete travellingSalesmanProblem;
             }
@@ -51,6 +52,7 @@ int main()
                 TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(filename);
                 travellingSalesmanProblem->print();
                 travellingSalesmanProblem->bruteForce();
+                travellingSalesmanProblem->littleAlgorithm();
 
                 delete travellingSalesmanProblem;
             }

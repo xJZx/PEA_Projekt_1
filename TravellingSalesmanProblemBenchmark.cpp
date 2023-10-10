@@ -17,10 +17,11 @@ TravellingSalesmanProblemBenchmark::TravellingSalesmanProblemBenchmark(std::stri
 }
 
 void TravellingSalesmanProblemBenchmark::test_bruteForce(std::string src) {
+    
+    const int N = 10;
+    int results[N];
 
-    int results[5];
-
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < N; i++)
     {
         TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(src);
 
@@ -36,10 +37,10 @@ void TravellingSalesmanProblemBenchmark::test_bruteForce(std::string src) {
         results[i] = 1000.0 * elapsed / frequency;
     }
     int result = 0;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < N; i++)
     {
         result += results[i];
     }
 
-    std::cout << "TSP Brute Force algorithm average time: " << result / 5 << "[ms]" << std::endl;
+    std::cout << "TSP Brute Force algorithm average time: " << result / N << "[ms]" << std::endl;
 }

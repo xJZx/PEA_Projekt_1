@@ -118,14 +118,16 @@ void TravellingSalesmanProblem::bruteForce() {
 
     // okreslenie domyslnej sciezki (wyjsciowej)
     for (int i = 0; i < V; i++) {
+        // po ostatnim wierzcholku dodajemy kolejny, potem potrzebne do permutacji
         trip.insert(trip.end(), i);
     }
 
     // okreslenie powrotu do punktu wyjscia dla domyslnej sciezki
-    trip.insert(trip.end(), 0);
+    trip.insert(trip.end(), source);
 
     // next_permutation z biblioteki <algorithm>, pozwala rearan¿owaæ elementy tab. wekt. tak aby uzyskaæ wszystkie mo¿liwe jej permutacje
-    while (std::next_permutation(trip.begin() + 1, trip.end() - 1)) {
+    // rearan¿ujemy tylko wierzcho³ki odwiedzane, nie wyjœciowy
+    do {
         currentValue = 0;
         // dodawanie wag krawêdzi grafu do ca³kowitego kosztu obecnej œcie¿ki
         for (int i = 0; i < V; i++) {
@@ -137,7 +139,7 @@ void TravellingSalesmanProblem::bruteForce() {
             bestValue = currentValue;
             bestTrip = trip;
         }
-    }
+    } while (std::next_permutation(trip.begin() + 1, trip.end() - 1));
 
     // V + 1, aby pokazaæ ¿e komiwoja¿er dotar³ do domku
     std::cout << "Best trip: ";
@@ -180,6 +182,52 @@ void TravellingSalesmanProblem::bruteForce_test() {
             bestValue = currentValue;
             bestTrip = trip;
         }
+    }
+}
+
+void TravellingSalesmanProblem::littleAlgorithm() {
+    // tablica wspolczynnikow standaryzacji
+    std::vector<int> aFactor;
+    std::vector<int> bFactor;
+
+    int min = INT_MAX;
+
+    for (int row = 0; row < V; row++) {
+        for (int column = 0; column < V; column++) {
+            // szukamy minimum dla RZÊDU
+            if (array[row][column] < min) {
+                min = array[row][column];
+            }
+        }
+        // dodajemy minimum do tablicy wspó³cz. a
+        aFactor.emplace_back(min);
+        std::cout << "a" << row << " " << min << std::endl;
+        // ponowne ustalenie minimum
+        min = INT_MAX;
+    }
+
+    // 1. krok do stworzenia C'
+    for (int row = 0; row < V; row++) {
+        for (int column = 0; column < V; column++) {
+            // Cij - ai
+            if (row != column) {
+                array[row][column] - aFactor[row];
+            }
+        }
+    }
+
+    for (int column = 0; column < V; column++) {
+        for (int row = 0; row < V; row++) {
+            // szukamy minimum dla KOLUMNY
+            if (array[row][column] < min) {
+                min = array[row][column];
+            }
+        }
+        // dodajemy minimum do tablicy wspó³cz. a
+        bFactor.emplace_back(min);
+        std::cout << "b" << column << " " << min << std::endl;
+        // ponowne ustalenie minimum
+        min = INT_MAX;
     }
 }
 
