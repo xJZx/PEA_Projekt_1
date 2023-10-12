@@ -79,8 +79,8 @@ int main()
                 std::cin >> high;
                 std::cout << std::endl;
 
-                //TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(v, low, high);
-                //delete travellingSalesmanProblemBenchmark;
+                TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(v, low, high);
+                delete travellingSalesmanProblemBenchmark;
             }
             break;
 
@@ -91,7 +91,6 @@ int main()
                 std::cin >> filename;
                 std::cout << std::endl;
                 TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(filename);
-                //travellingSalesmanProblemBenchmark->print();
 
                 delete travellingSalesmanProblemBenchmark;
             }

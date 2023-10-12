@@ -12,9 +12,7 @@ TravellingSalesmanProblem::TravellingSalesmanProblem(int v, int low, int high)
     // skierowany graf, w ktorym sciezki do obu tych samych wierzcholkow mog¹ byæ ró¿ne, w zale¿noœci z którego idziemy
     // czyli niesymetryczna macierz s¹siedztwa z wagami, dlatego taki wzór
     // ZMIENIÆ NA GRAF PE£NY!!!
-    this->E = (int)(V * (V - 1));
-
-
+    
     array = new int* [V];
 
     for (int i = 0; i < V; i++)
@@ -23,42 +21,20 @@ TravellingSalesmanProblem::TravellingSalesmanProblem(int v, int low, int high)
     // wypelnienie macierzy maksymalnymi wartosciami
     for (int i = 0; i < V; i++)
         for (int j = 0; j < V; j++)
-            array[i][j] = INT_MAX;
+            array[i][j] = -1;
 
-    std::vector<int> visited;
-    int prev = 0, j = 0, next, weight;
-
-    visited.push_back(prev);
-
-    // wypelnienie macierzy losowymi wartosciami
-    for (int i = 0; i < V - 1; i++)
+    int weight;
+    for (int first = 0; first < V; first++)
     {
-        next = rand() % V;
-        while (j < visited.size())
+        for (int second = 0; second < V; second++)
         {
-            if (next == visited[j])
-            {
-                next = (next + 1) % V;
-                j = 0;
+            if (first != second) {
+                weight = (rand() % (high - low + 1)) + low;
+                array[first][second] = weight;
             }
-            else
-                j++;
+            // bo graf asymetryczny skierowany
+            //array[second][first] = weight;
         }
-        j = 0;
-        weight = rand() % high + low;
-        array[prev][next] = weight;
-        prev = next;
-        visited.push_back(prev);
-    }
-    for (int i = V - 1; i < E; i++)
-    {
-        prev = rand() % V;
-        next = rand() % V;
-        while (prev == next)
-            next = rand() % V;
-
-        weight = rand() % high + low;
-        array[prev][next] = weight;
     }
 
 

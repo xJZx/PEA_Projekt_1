@@ -4,7 +4,7 @@ class TravellingSalesmanProblem
 {
 private:
 	// ilosc wierzcholkow
-	int V, E;
+	int V;
 	// macierz s¹siedztwa, graf pe³ny, skierowany
 	int** array;
 	
