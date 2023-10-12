@@ -194,7 +194,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
 
     int lowerBound = 0;
 
-    for (int N = V; N > 1; N--) {
+    for (int N = V; N > 0; N--) {
         for (int row = 0; row < V; row++) {
             for (int column = 0; column < V; column++) {
                 // szukamy minimum dla RZÊDU
@@ -219,7 +219,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
         }
 
-        print();
+        //print();
 
         for (int column = 0; column < V; column++) {
             for (int row = 0; row < V; row++) {
@@ -245,7 +245,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
         }
 
-        print();
+        //print();
 
         // obliczenie dolnego oszacowania dla wszystkich rozwi¹zañ
         for (int i = 0; i < V; i++) {
@@ -286,12 +286,15 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                             minColumn = array[j][column];
                         }
                     }
-                    resignationArray[row][column] = minRow + minColumn;
+                    if (minRow != INT_MAX && minColumn != INT_MAX) {
+                        resignationArray[row][column] = minRow + minColumn;
+                    }
                 }
             }
         }
 
         // sprawdzenie poprawnosci macierzy rezygnacji
+        std::cout << "Resignation Matrix: " << std::endl;
         for (int i = 0; i < V; i++) {
             for (int j = 0; j < V; j++) {
                 std::cout << resignationArray[i][j] << " ";
@@ -305,7 +308,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         int k, l;
         for (int row = 0; row < V; row++) {
             for (int column = 0; column < V; column++) {
-                if (resignationArray[row][column] > d_kl) {
+                if (resignationArray[row][column] >= d_kl) {
                     d_kl = resignationArray[row][column];
                     k = row;
                     l = column;
@@ -313,6 +316,11 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
         }
         std::cout << "d_kl = " << d_kl << std::endl;
+
+        // sprawdzenie warunku koñcowego d_kl == 0
+        if (d_kl == 0) {
+            return;
+        }
 
         // obliczenie dolnej granicy dla K2
         int lowerBound_K2 = lowerBound + d_kl;
@@ -332,6 +340,142 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         print();
     }
 
+}
+
+void TravellingSalesmanProblem::littleAlgorithm_test() {
+    // tablica wspolczynnikow standaryzacji
+    std::vector<int> aFactor;
+    std::vector<int> bFactor;
+
+    int min = INT_MAX;
+
+    int lowerBound = 0;
+
+    for (int N = V; N > 0; N--) {
+        for (int row = 0; row < V; row++) {
+            for (int column = 0; column < V; column++) {
+                // szukamy minimum dla RZÊDU
+                if (array[row][column] < min && row != column && array[row][column] != -1) {
+                    min = array[row][column];
+                }
+            }
+            // dodajemy minimum do tablicy wspó³cz. a
+            aFactor.emplace_back(min);
+            // ponowne ustalenie minimum
+            min = INT_MAX;
+        }
+
+        // 1. krok do stworzenia C' - odjêcie od C wspó³czynnika a
+        for (int row = 0; row < V; row++) {
+            for (int column = 0; column < V; column++) {
+                // Cij - ai
+                if (row != column && array[row][column] != -1) {
+                    array[row][column] -= aFactor.at(row);
+                }
+            }
+        }
+
+        for (int column = 0; column < V; column++) {
+            for (int row = 0; row < V; row++) {
+                // szukamy minimum dla KOLUMNY
+                if (array[row][column] < min && row != column && array[row][column] != -1) {
+                    min = array[row][column];
+                }
+            }
+            // dodajemy minimum do tablicy wspó³cz. a
+            bFactor.emplace_back(min);
+            // ponowne ustalenie minimum
+            min = INT_MAX;
+        }
+
+        // 2. krok do stworzenia C' - odjêcie od C wspó³czynnika b
+        for (int column = 0; column < V; column++) {
+            for (int row = 0; row < V; row++) {
+                // Cij - bi
+                if (column != row && array[column][row] != -1) {
+                    array[column][row] -= bFactor.at(row);
+                }
+            }
+        }
+
+        // obliczenie dolnego oszacowania dla wszystkich rozwi¹zañ
+        for (int i = 0; i < V; i++) {
+            if (aFactor[i] == INT_MAX) {
+                lowerBound += 0;
+            }
+            else {
+                lowerBound += aFactor[i];
+            }
+            if (bFactor[i] == INT_MAX) {
+                lowerBound += 0;
+            }
+            else {
+                lowerBound += bFactor[i];
+            }
+        }
+
+        // wyczyszczenie tablic wektorowych
+        aFactor.clear();
+        bFactor.clear();
+
+        // stworzenie macierzy kosztów rezygnacji dla tras "zerowych"
+        std::vector<std::vector<int>> resignationArray(V, std::vector<int>(V, -1));
+        for (int row = 0; row < V; row++) {
+            for (int column = 0; column < V; column++) {
+                if (array[row][column] == 0 && row != column && array[row][column] != -1) {
+                    int minRow = INT_MAX;
+                    int minColumn = INT_MAX;
+                    for (int i = 0; i < V; i++) {
+                        if (array[row][i] < minRow && row != i && i != column && array[row][i] != -1) {
+                            minRow = array[row][i];
+                        }
+                    }
+                    for (int j = 0; j < V; j++) {
+                        if (array[j][column] < minColumn && j != column && j != row && array[j][column] != -1) {
+                            minColumn = array[j][column];
+                        }
+                    }
+                    if (minRow != INT_MAX && minColumn != INT_MAX) {
+                        resignationArray[row][column] = minRow + minColumn;
+                    }
+                }
+            }
+        }
+
+        // znalezienie d(kl) dla macierzy rezygnacji
+        int d_kl = 0;
+        // od razu zapisujemy row i column które bêd¹ wykreœlane z macierzy
+        int k, l;
+        for (int row = 0; row < V; row++) {
+            for (int column = 0; column < V; column++) {
+                if (resignationArray[row][column] >= d_kl) {
+                    d_kl = resignationArray[row][column];
+                    k = row;
+                    l = column;
+                }
+            }
+        }
+
+        // sprawdzenie warunku koñcowego d_kl == 0
+        if (d_kl == 0) {
+            return;
+        }
+
+        // obliczenie dolnej granicy dla K2
+        int lowerBound_K2 = lowerBound + d_kl;
+
+        // tworzymy macierz zredukowan¹ C1
+        // najpierw usuwamy rz¹d
+        for (int i = 0; i < V; i++) {
+            array[k][i] = -1;
+        }
+        // potem kolumnê
+        for (int j = 0; j < V; j++) {
+            array[j][l] = -1;
+        }
+        // blokujemy podcykl tej samej œcie¿ki
+        array[l][k] = -1;
+    }
 }
 
 

@@ -17,6 +17,7 @@ public:
 	void littleAlgorithm();
 
 	void bruteForce_test();
+	void littleAlgorithm_test();
 
 	void print();
 };
