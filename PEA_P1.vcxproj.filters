@@ -58,5 +58,23 @@
     <Text Include="test7.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="tsp10.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp12.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp13.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp14.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp15.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp17.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

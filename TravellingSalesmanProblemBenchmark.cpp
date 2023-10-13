@@ -11,20 +11,28 @@ long long int read_QPC()
     return ((long long int) count.QuadPart);
 }
 
-TravellingSalesmanProblemBenchmark::TravellingSalesmanProblemBenchmark(int v, int low, int high)
+TravellingSalesmanProblemBenchmark::TravellingSalesmanProblemBenchmark(int v, int low, int high, std::string type)
 {
-    test_bruteForce(v, low, high);
-    test_littleAlgorithm(v, low, high);
+    if (type == "bruteForce") {
+        test_bruteForce(v, low, high);
+    }
+    else if (type == "little") {
+        test_littleAlgorithm(v, low, high);
+    }
 }
 
-TravellingSalesmanProblemBenchmark::TravellingSalesmanProblemBenchmark(std::string src)
+TravellingSalesmanProblemBenchmark::TravellingSalesmanProblemBenchmark(std::string src, std::string type)
 {
-    test_bruteForce(src);
-    test_littleAlgorithm(src);
+    if (type == "bruteForce") {
+        test_bruteForce(src);
+    }
+    else if (type == "little") {
+        test_littleAlgorithm(src);
+    }
 }
 
 // iloœæ powtórzeñ
-const int N = 10;
+const int N = 1;
 
 void TravellingSalesmanProblemBenchmark::test_bruteForce(int v, int low, int high) {
 

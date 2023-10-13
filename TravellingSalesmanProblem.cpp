@@ -83,6 +83,10 @@ TravellingSalesmanProblem::~TravellingSalesmanProblem() {
 }
 
 void TravellingSalesmanProblem::bruteForce() {
+    if (array == NULL) {
+        std::cout << "Array is empty!\n";
+        return;
+    }
     // przyjmijmy, ¿e zaczynamy od wierzcho³ka 0
     int source = 0;
     int bestValue = INT_MAX;
@@ -128,6 +132,10 @@ void TravellingSalesmanProblem::bruteForce() {
 }
 
 void TravellingSalesmanProblem::bruteForce_test() {
+    if (array == NULL) {
+        std::cout << "Array is empty!\n";
+        return;
+    }
     // przyjmijmy, ¿e zaczynamy od wierzcho³ka 0
     int source = 0;
     int bestValue = INT_MAX;
@@ -162,6 +170,10 @@ void TravellingSalesmanProblem::bruteForce_test() {
 }
 
 void TravellingSalesmanProblem::littleAlgorithm() {
+    if (array == NULL) {
+        std::cout << "Array is empty!\n";
+        return;
+    }
     // tablica wspolczynnikow standaryzacji
     std::vector<int> aFactor;
     std::vector<int> bFactor;
@@ -180,7 +192,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
             // dodajemy minimum do tablicy wspó³cz. a
             aFactor.emplace_back(min);
-            std::cout << "a" << row << " " << min << std::endl;
+            //std::cout << "a" << row << " " << min << std::endl;
             // ponowne ustalenie minimum
             min = INT_MAX;
         }
@@ -206,7 +218,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
             // dodajemy minimum do tablicy wspó³cz. a
             bFactor.emplace_back(min);
-            std::cout << "b" << column << " " << min << std::endl;
+            //std::cout << "b" << column << " " << min << std::endl;
             // ponowne ustalenie minimum
             min = INT_MAX;
         }
@@ -270,13 +282,13 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         }
 
         // sprawdzenie poprawnosci macierzy rezygnacji
-        std::cout << "Resignation Matrix: " << std::endl;
-        for (int i = 0; i < V; i++) {
-            for (int j = 0; j < V; j++) {
-                std::cout << resignationArray[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
+        //std::cout << "Resignation Matrix: " << std::endl;
+        //for (int i = 0; i < V; i++) {
+        //    for (int j = 0; j < V; j++) {
+        //        std::cout << resignationArray[i][j] << " ";
+        //    }
+        //    std::cout << std::endl;
+        //}
 
         // znalezienie d(kl) dla macierzy rezygnacji
         int d_kl = 0;
@@ -313,12 +325,16 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         // blokujemy podcykl tej samej œcie¿ki
         array[l][k] = -1;
 
-        print();
+        //print();
     }
 
 }
 
 void TravellingSalesmanProblem::littleAlgorithm_test() {
+    if (array == NULL) {
+        std::cout << "Array is empty!\n";
+        return;
+    }
     // tablica wspolczynnikow standaryzacji
     std::vector<int> aFactor;
     std::vector<int> bFactor;
@@ -457,6 +473,11 @@ void TravellingSalesmanProblem::littleAlgorithm_test() {
 
 void TravellingSalesmanProblem::print()
 {
+    if (array == NULL) {
+        std::cout << "Array is empty!\n";
+        return;
+    }
+
     std::cout << "Graph stored in the matrix: \n";
     for (int first = 0; first < V; first++)
     {
@@ -468,4 +489,21 @@ void TravellingSalesmanProblem::print()
         std::cout << "\n";
     }
     std::cout << std::endl;
+}
+
+void TravellingSalesmanProblem::saveToFile()
+{
+    std::fstream file;
+    file.open("generated.txt");
+
+    file << V << "\n";
+
+    for (int row = 0; row < V; row++) {
+        for (int column = 0; column < V; column++) {
+            file << array[row][column] << "    ";
+        }
+        file << "\n";
+    }
+
+    file.close();
 }

@@ -20,4 +20,5 @@ public:
 	void littleAlgorithm_test();
 
 	void print();
+	void saveToFile();
 };
