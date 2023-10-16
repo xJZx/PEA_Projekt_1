@@ -493,7 +493,7 @@ void TravellingSalesmanProblem::print()
 
 void TravellingSalesmanProblem::saveToFile()
 {
-    std::fstream file;
+    std::ofstream file;
     file.open("generated.txt");
 
     file << V << "\n";
