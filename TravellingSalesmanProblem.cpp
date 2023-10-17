@@ -8,6 +8,11 @@
 
 TravellingSalesmanProblem::TravellingSalesmanProblem(int v, int low, int high)
 {
+    if (v == 0) {
+        std::cout << "Matrix cannot be empty!\n";
+        return;
+    }
+
     this->V = v;
     // skierowany graf, w ktorym sciezki do obu tych samych wierzcholkow mog¹ byæ ró¿ne, w zale¿noœci z którego idziemy
     // czyli niesymetryczna macierz s¹siedztwa z wagami, dlatego taki wzór
@@ -174,6 +179,11 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         std::cout << "Array is empty!\n";
         return;
     }
+    
+    // tablica odwiedzonych wierzcho³ków
+    std::vector<int> visitedRow;
+    std::vector<int> visitedColumn;
+
     // tablica wspolczynnikow standaryzacji
     std::vector<int> aFactor;
     std::vector<int> bFactor;
@@ -251,7 +261,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
         }
 
-        std::cout << "Lower bound on all tours: " << lowerBound << std::endl;
+        //std::cout << "Lower bound on all tours: " << lowerBound << std::endl;
 
         // wyczyszczenie tablic wektorowych
         aFactor.clear();
@@ -303,10 +313,26 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                 }
             }
         }
-        std::cout << "d_kl = " << d_kl << std::endl;
+        //std::cout << "d_kl = " << d_kl << std::endl;
+
+        visitedRow.push_back(k);
+        visitedColumn.push_back(l);
 
         // sprawdzenie warunku koñcowego d_kl == 0
         if (d_kl == 0) {
+            std::cout << "The row path:    ";
+            for (int i = 0; i < V - 1; i++) {
+                std::cout << visitedRow[i] << " ";
+            }
+            std::cout << std::endl;
+
+            std::cout << "The column path: ";
+            for (int i = 0; i < V - 1; i++) {
+                std::cout << visitedColumn[i] << " ";
+            }
+            std::cout << std::endl;
+
+            std::cout << "Total minimum cost: " << lowerBound << std::endl;
             return;
         }
 

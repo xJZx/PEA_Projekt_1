@@ -12,98 +12,11 @@ int main()
     while (true) {
         int mode = 0;
         std::cout << "Select the mode:\n";
-        std::cout << "1. Normal\n";
-        std::cout << "2. Benchmark\n";
-        std::cout << "3. Zaliczenie\n";
+        std::cout << "1. Start\n";
         std::cout << "Any button - EXIT\n";
         std::cin >> mode;
 
         if (mode == 1) {
-            int creation = 0;
-            std::cout << "Select how the graph will be created:\n";
-            std::cout << "1. Random\n";
-            std::cout << "2. From the file\n";
-            std::cin >> creation;
-            switch (creation) {
-            case 1:
-            {
-                int v;
-                int low, high;
-                std::cout << "Insert the amount of vertices: ";
-                std::cin >> v;
-                std::cout << "Insert lower range: ";
-                std::cin >> low;
-                std::cout << "Insert upper range: ";
-                std::cin >> high;
-                std::cout << std::endl;
-
-                TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(v, low, high);
-                //TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(v, low, high);
-                travellingSalesmanProblem->print();
-                travellingSalesmanProblem->bruteForce();
-                //travellingSalesmanProblem->littleAlgorithm();
-
-                delete travellingSalesmanProblem;
-            }
-            break;
-
-            case 2:
-            {
-                std::string filename;
-                std::cout << "Insert the filename: ";
-                std::cin >> filename;
-                std::cout << std::endl;
-                TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(filename);
-                //travellingSalesmanProblem->print();
-                travellingSalesmanProblem->bruteForce();
-                //TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(filename);
-                //travellingSalesmanProblem->littleAlgorithm();
-
-                delete travellingSalesmanProblem;
-                //delete travellingSalesmanProblemBenchmark;
-            }
-            break;
-
-            }
-        }
-        else if (mode == 2) {
-            int creation = 0;
-            std::cout << "Select how the graph will be created:\n";
-            std::cout << "1. Random\n";
-            std::cout << "2. From the file\n";
-            std::cin >> creation;
-            switch (creation) {
-            case 1:
-            {
-                int v;
-                int low, high;
-                std::cout << "Insert the amount of vertices: ";
-                std::cin >> v;
-                std::cout << "Insert lower range: ";
-                std::cin >> low;
-                std::cout << "Insert upper range: ";
-                std::cin >> high;
-                std::cout << std::endl;
-
-                //TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(v, low, high);
-                //delete travellingSalesmanProblemBenchmark;
-            }
-            break;
-
-            case 2:
-            {
-                std::string filename;
-                std::cout << "Insert the filename: ";
-                std::cin >> filename;
-                std::cout << std::endl;
-                //TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(filename);
-
-                //delete travellingSalesmanProblemBenchmark;
-            }
-            break;
-            }
-        }
-        else if (mode == 3) {
             int creation = 0;
             std::cout << "Select how the graph will be created:\n";
             std::cout << "1. Random\n";
@@ -156,7 +69,6 @@ int main()
             case 4:
             {
                 TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(lastFilename);
-                //travellingSalesmanProblem->print();
                 travellingSalesmanProblem->bruteForce();
                 TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(lastFilename, "bruteForce");
 
@@ -168,7 +80,6 @@ int main()
             case 5:
             {
                 TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(lastFilename);
-                //travellingSalesmanProblem->print();
                 travellingSalesmanProblem->littleAlgorithm();
                 TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(lastFilename, "little");
 
