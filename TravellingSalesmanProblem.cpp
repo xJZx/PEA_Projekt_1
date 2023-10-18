@@ -217,7 +217,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
         }
 
-        //print();
+        print();
 
         for (int column = 0; column < V; column++) {
             for (int row = 0; row < V; row++) {
@@ -243,7 +243,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
         }
 
-        //print();
+        print();
 
         // obliczenie dolnego oszacowania dla wszystkich rozwi¹zañ
         for (int i = 0; i < V; i++) {
@@ -261,7 +261,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
         }
 
-        //std::cout << "Lower bound on all tours: " << lowerBound << std::endl;
+        std::cout << "Lower bound on all tours: " << lowerBound << std::endl;
 
         // wyczyszczenie tablic wektorowych
         aFactor.clear();
@@ -275,59 +275,63 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                     int minRow = INT_MAX;
                     int minColumn = INT_MAX;
                     for (int i = 0; i < V; i++) {
-                        if (array[row][i] < minRow && row != i && i != column && array[row][i] != -1) {
+                        if (array[row][i] < minRow && i != column && array[row][i] != -1) {
                             minRow = array[row][i];
                         }
                     }
                     for (int j = 0; j < V; j++) {
-                        if (array[j][column] < minColumn && j != column && j != row && array[j][column] != -1) {
+                        if (array[j][column] < minColumn && j != row && array[j][column] != -1) {
                             minColumn = array[j][column];
                         }
                     }
                     if (minRow != INT_MAX && minColumn != INT_MAX) {
                         resignationArray[row][column] = minRow + minColumn;
                     }
+                    // kwestia czy "nieskonczonosc" + 0 powinno dawac 0
+                    //else {
+                    //    resignationArray[row][column] = 0;
+                    //}
                 }
             }
         }
 
         // sprawdzenie poprawnosci macierzy rezygnacji
-        //std::cout << "Resignation Matrix: " << std::endl;
-        //for (int i = 0; i < V; i++) {
-        //    for (int j = 0; j < V; j++) {
-        //        std::cout << resignationArray[i][j] << " ";
-        //    }
-        //    std::cout << std::endl;
-        //}
+        std::cout << "Resignation Matrix: " << std::endl;
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                std::cout << resignationArray[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
 
         // znalezienie d(kl) dla macierzy rezygnacji
-        int d_kl = 0;
+        int d_kl = -1;
         // od razu zapisujemy row i column które bêd¹ wykreœlane z macierzy
         int k, l;
         for (int row = 0; row < V; row++) {
             for (int column = 0; column < V; column++) {
-                if (resignationArray[row][column] >= d_kl) {
+                if (resignationArray[row][column] > d_kl && resignationArray[row][column] != -1 && row != column) {
                     d_kl = resignationArray[row][column];
                     k = row;
                     l = column;
                 }
             }
         }
-        //std::cout << "d_kl = " << d_kl << std::endl;
+        std::cout << "d_kl = " << d_kl << std::endl;
 
         visitedRow.push_back(k);
         visitedColumn.push_back(l);
 
         // sprawdzenie warunku koñcowego d_kl == 0
-        if (d_kl == 0) {
+        if (d_kl == -1) {
             std::cout << "The row path:    ";
-            for (int i = 0; i < V - 1; i++) {
+            for (int i = 0; i < V; i++) {
                 std::cout << visitedRow[i] << " ";
             }
             std::cout << std::endl;
 
             std::cout << "The column path: ";
-            for (int i = 0; i < V - 1; i++) {
+            for (int i = 0; i < V; i++) {
                 std::cout << visitedColumn[i] << " ";
             }
             std::cout << std::endl;
@@ -351,7 +355,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         // blokujemy podcykl tej samej œcie¿ki
         array[l][k] = -1;
 
-        //print();
+        print();
     }
 
 }

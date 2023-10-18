@@ -76,5 +76,8 @@
     <Text Include="tsp17.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="test8.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
