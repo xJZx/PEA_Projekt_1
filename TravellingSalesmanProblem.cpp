@@ -217,7 +217,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
         }
 
-        print();
+        //print();
 
         for (int column = 0; column < V; column++) {
             for (int row = 0; row < V; row++) {
@@ -243,7 +243,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
         }
 
-        print();
+        //print();
 
         // obliczenie dolnego oszacowania dla wszystkich rozwi¹zañ
         for (int i = 0; i < V; i++) {
@@ -261,7 +261,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
         }
 
-        std::cout << "Lower bound on all tours: " << lowerBound << std::endl;
+        //std::cout << "Lower bound on all tours: " << lowerBound << std::endl;
 
         // wyczyszczenie tablic wektorowych
         aFactor.clear();
@@ -312,13 +312,13 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         }
 
         // sprawdzenie poprawnosci macierzy rezygnacji
-        std::cout << "Resignation Matrix: " << std::endl;
-        for (int i = 0; i < V; i++) {
-            for (int j = 0; j < V; j++) {
-                std::cout << resignationArray[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
+        //std::cout << "Resignation Matrix: " << std::endl;
+        //for (int i = 0; i < V; i++) {
+        //    for (int j = 0; j < V; j++) {
+        //       std::cout << resignationArray[i][j] << " ";
+        //    }
+        //    std::cout << std::endl;
+        //}
 
         // znalezienie d(kl) dla macierzy rezygnacji
         int d_kl = -1;
@@ -333,7 +333,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                 }
             }
         }
-        std::cout << "d_kl = " << d_kl << std::endl;
+        //std::cout << "d_kl = " << d_kl << std::endl;
 
         visitedRow.push_back(k);
         visitedColumn.push_back(l);
@@ -390,9 +390,10 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         // blokujemy podcykl tej samej œcie¿ki
         array[l][k] = -1;
 
-        print();
+        //print();
     }
 
+    // algorytm na wytyczenie œcie¿ki z par szlaków miêdzy wierzcho³kami
     std::vector<int> path;
     int lastNeighbour;
     for (int v = 0; v < V; v++) {
