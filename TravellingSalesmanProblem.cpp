@@ -393,16 +393,44 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         print();
     }
 
+    std::vector<int> path;
+    int lastNeighbour;
+    for (int v = 0; v < V; v++) {
+        for (int i = 0; i < visitedRow.size(); i++) {
+            if (visitedRow[i] == 0 && v == 0) {
+                path.push_back(visitedRow[i]);
+                path.push_back(visitedColumn[i]);
+                lastNeighbour = visitedColumn[i];
+            }
+            else if (visitedRow[i] == lastNeighbour) {
+                path.push_back(visitedColumn[i]);
+                lastNeighbour = visitedColumn[i];
+                if (path[0] == lastNeighbour) {
+                    break;
+                }
+            }
+        }
+        if (path[0] == lastNeighbour) {
+            break;
+        }
+    }
+
     // gdy nie znajdziemy wczeœniej warunku koñcowego
     std::cout << "The row path:    ";
-    for (int i = 0; i < V; i++) {
+    for (int i = 0; i < visitedRow.size(); i++) {
         std::cout << visitedRow[i] << " ";
     }
     std::cout << std::endl;
 
     std::cout << "The column path: ";
-    for (int i = 0; i < V; i++) {
+    for (int i = 0; i < visitedColumn.size(); i++) {
         std::cout << visitedColumn[i] << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "The path: ";
+    for (int i = 0; i < path.size(); i++) {
+        std::cout << path[i] << " ";
     }
     std::cout << std::endl;
 
