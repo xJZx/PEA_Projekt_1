@@ -284,13 +284,29 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                             minColumn = array[j][column];
                         }
                     }
-                    if (minRow != INT_MAX && minColumn != INT_MAX) {
+                    if ((minRow != INT_MAX && minColumn != INT_MAX) && (minRow != 0 || minColumn != 0)) {
                         resignationArray[row][column] = minRow + minColumn;
                     }
+                    // jesli minRow == INT_MAX && minColumn != INT_MAX && minColumn!= 0
+                    else if (minRow == INT_MAX && minColumn != INT_MAX && minColumn != 0) {
+                        resignationArray[row][column] = minColumn;
+                    }
+                    // jesli minColumn == INT_MAX && minRow != INT_MAX && minRow!= 0
+                    else if (minColumn == INT_MAX && minRow != INT_MAX && minRow != 0) {
+                        resignationArray[row][column] = minRow;
+                    }
+                    // jesli zero w (k, l) ma w obu minimach zero, œwiadczy to ¿e jest ono podcyklem tamtych zer
+                    else if (minRow == 0 && minColumn == 0) {
+                        resignationArray[row][column] = -1;
+                    }
                     // kwestia czy "nieskonczonosc" + 0 powinno dawac 0
-                    //else {
-                    //    resignationArray[row][column] = 0;
-                    //}
+                    else if ((minRow == INT_MAX && minColumn == 0) || (minRow == 0 && minColumn == INT_MAX)){
+                        resignationArray[row][column] = 0;
+                    }
+                    // jesli zero nie ma zadnego minimum, to jest ono ostatnim zerem, które zamyka nam cykl hamiltona
+                    else if (minRow == INT_MAX && minColumn == INT_MAX) {
+                        resignationArray[row][column] = 0;
+                    }
                 }
             }
         }
@@ -310,7 +326,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         int k, l;
         for (int row = 0; row < V; row++) {
             for (int column = 0; column < V; column++) {
-                if (resignationArray[row][column] > d_kl && resignationArray[row][column] != -1 && row != column) {
+                if (resignationArray[row][column] >= d_kl && resignationArray[row][column] != -1 && row != column) {
                     d_kl = resignationArray[row][column];
                     k = row;
                     l = column;
@@ -352,11 +368,46 @@ void TravellingSalesmanProblem::littleAlgorithm() {
         for (int j = 0; j < V; j++) {
             array[j][l] = -1;
         }
+
+        // usuwamy podcykle dla obecnych tras
+        int rightNeighbour, leftNeighbour;
+        for (int v = 0; v < V; v++) {
+            for (int i = 0; i < visitedRow.size(); i++) {
+                if (visitedRow[i] == v) {
+                    for (int j = 0; j < visitedColumn.size(); j++) {
+                        if (visitedColumn[j] == v) {
+                            rightNeighbour = visitedColumn[i];
+                            leftNeighbour = visitedRow[j];
+
+                            array[rightNeighbour][leftNeighbour] = -1;
+                            array[leftNeighbour][rightNeighbour] = -1;
+                        }
+                    }
+                }
+            }
+        }
+
         // blokujemy podcykl tej samej œcie¿ki
         array[l][k] = -1;
 
         print();
     }
+
+    // gdy nie znajdziemy wczeœniej warunku koñcowego
+    std::cout << "The row path:    ";
+    for (int i = 0; i < V; i++) {
+        std::cout << visitedRow[i] << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "The column path: ";
+    for (int i = 0; i < V; i++) {
+        std::cout << visitedColumn[i] << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Total minimum cost: " << lowerBound << std::endl;
+    return;
 
 }
 
@@ -365,6 +416,11 @@ void TravellingSalesmanProblem::littleAlgorithm_test() {
         std::cout << "Array is empty!\n";
         return;
     }
+
+    // tablica odwiedzonych wierzcho³ków
+    std::vector<int> visitedRow;
+    std::vector<int> visitedColumn;
+
     // tablica wspolczynnikow standaryzacji
     std::vector<int> aFactor;
     std::vector<int> bFactor;
@@ -383,6 +439,7 @@ void TravellingSalesmanProblem::littleAlgorithm_test() {
             }
             // dodajemy minimum do tablicy wspó³cz. a
             aFactor.emplace_back(min);
+            //std::cout << "a" << row << " " << min << std::endl;
             // ponowne ustalenie minimum
             min = INT_MAX;
         }
@@ -406,6 +463,7 @@ void TravellingSalesmanProblem::littleAlgorithm_test() {
             }
             // dodajemy minimum do tablicy wspó³cz. a
             bFactor.emplace_back(min);
+            //std::cout << "b" << column << " " << min << std::endl;
             // ponowne ustalenie minimum
             min = INT_MAX;
         }
@@ -448,29 +506,49 @@ void TravellingSalesmanProblem::littleAlgorithm_test() {
                     int minRow = INT_MAX;
                     int minColumn = INT_MAX;
                     for (int i = 0; i < V; i++) {
-                        if (array[row][i] < minRow && row != i && i != column && array[row][i] != -1) {
+                        if (array[row][i] < minRow && i != column && array[row][i] != -1) {
                             minRow = array[row][i];
                         }
                     }
                     for (int j = 0; j < V; j++) {
-                        if (array[j][column] < minColumn && j != column && j != row && array[j][column] != -1) {
+                        if (array[j][column] < minColumn && j != row && array[j][column] != -1) {
                             minColumn = array[j][column];
                         }
                     }
-                    if (minRow != INT_MAX && minColumn != INT_MAX) {
+                    if ((minRow != INT_MAX && minColumn != INT_MAX) && (minRow != 0 || minColumn != 0)) {
                         resignationArray[row][column] = minRow + minColumn;
+                    }
+                    // jesli minRow == INT_MAX && minColumn != INT_MAX && minColumn!= 0
+                    else if (minRow == INT_MAX && minColumn != INT_MAX && minColumn != 0) {
+                        resignationArray[row][column] = minColumn;
+                    }
+                    // jesli minColumn == INT_MAX && minRow != INT_MAX && minRow!= 0
+                    else if (minColumn == INT_MAX && minRow != INT_MAX && minRow != 0) {
+                        resignationArray[row][column] = minRow;
+                    }
+                    // jesli zero w (k, l) ma w obu minimach zero, œwiadczy to ¿e jest ono podcyklem tamtych zer
+                    else if (minRow == 0 && minColumn == 0) {
+                        resignationArray[row][column] = -1;
+                    }
+                    // kwestia czy "nieskonczonosc" + 0 powinno dawac 0
+                    else if ((minRow == INT_MAX && minColumn == 0) || (minRow == 0 && minColumn == INT_MAX)) {
+                        resignationArray[row][column] = 0;
+                    }
+                    // jesli zero nie ma zadnego minimum, to jest ono ostatnim zerem, które zamyka nam cykl hamiltona
+                    else if (minRow == INT_MAX && minColumn == INT_MAX) {
+                        resignationArray[row][column] = 0;
                     }
                 }
             }
         }
 
         // znalezienie d(kl) dla macierzy rezygnacji
-        int d_kl = 0;
+        int d_kl = -1;
         // od razu zapisujemy row i column które bêd¹ wykreœlane z macierzy
         int k, l;
         for (int row = 0; row < V; row++) {
             for (int column = 0; column < V; column++) {
-                if (resignationArray[row][column] >= d_kl) {
+                if (resignationArray[row][column] >= d_kl && resignationArray[row][column] != -1 && row != column) {
                     d_kl = resignationArray[row][column];
                     k = row;
                     l = column;
@@ -478,8 +556,11 @@ void TravellingSalesmanProblem::littleAlgorithm_test() {
             }
         }
 
+        visitedRow.push_back(k);
+        visitedColumn.push_back(l);
+
         // sprawdzenie warunku koñcowego d_kl == 0
-        if (d_kl == 0) {
+        if (d_kl == -1) {
             return;
         }
 
@@ -495,6 +576,25 @@ void TravellingSalesmanProblem::littleAlgorithm_test() {
         for (int j = 0; j < V; j++) {
             array[j][l] = -1;
         }
+
+        // usuwamy podcykle dla obecnych tras
+        int rightNeighbour, leftNeighbour;
+        for (int v = 0; v < V; v++) {
+            for (int i = 0; i < visitedRow.size(); i++) {
+                if (visitedRow[i] == v) {
+                    for (int j = 0; j < visitedColumn.size(); j++) {
+                        if (visitedColumn[j] == v) {
+                            rightNeighbour = visitedColumn[i];
+                            leftNeighbour = visitedRow[j];
+
+                            array[rightNeighbour][leftNeighbour] = -1;
+                            array[leftNeighbour][rightNeighbour] = -1;
+                        }
+                    }
+                }
+            }
+        }
+
         // blokujemy podcykl tej samej œcie¿ki
         array[l][k] = -1;
     }
