@@ -12,6 +12,7 @@ int main()
     while (true) {
         int creation = 0;
         std::cout << "Select how the graph will be created:\n";
+        std::cout << "Any key - EXIT\n";
         std::cout << "1. Random\n";
         std::cout << "2. From the file\n";
         std::cout << "3. Show last\n";

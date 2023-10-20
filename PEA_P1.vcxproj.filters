@@ -52,12 +52,6 @@
     <Text Include="testLittle.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="test6.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="test7.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
     <Text Include="tsp10.txt">
       <Filter>Resource Files</Filter>
     </Text>
@@ -77,6 +71,12 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="test8.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp6_1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp6_2.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

@@ -141,8 +141,6 @@
     <Text Include="test3.txt" />
     <Text Include="test4.txt" />
     <Text Include="test5.txt" />
-    <Text Include="test6.txt" />
-    <Text Include="test7.txt" />
     <Text Include="test8.txt" />
     <Text Include="testLittle.txt" />
     <Text Include="tsp10.txt" />
@@ -151,6 +149,8 @@
     <Text Include="tsp14.txt" />
     <Text Include="tsp15.txt" />
     <Text Include="tsp17.txt" />
+    <Text Include="tsp6_1.txt" />
+    <Text Include="tsp6_2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <queue>
 
 TravellingSalesmanProblem::TravellingSalesmanProblem(int v, int low, int high)
 {
@@ -17,16 +18,9 @@ TravellingSalesmanProblem::TravellingSalesmanProblem(int v, int low, int high)
     // skierowany graf, w ktorym sciezki do obu tych samych wierzcholkow mog¹ byæ ró¿ne, w zale¿noœci z którego idziemy
     // czyli niesymetryczna macierz s¹siedztwa z wagami, dlatego taki wzór
     // ZMIENIÆ NA GRAF PE£NY!!!
-    
-    array = new int* [V];
-
-    for (int i = 0; i < V; i++)
-        array[i] = new int[V];
 
     // wypelnienie macierzy maksymalnymi wartosciami
-    for (int i = 0; i < V; i++)
-        for (int j = 0; j < V; j++)
-            array[i][j] = -1;
+    array.resize(V, std::vector<int>(V, -1));
 
     int weight;
     for (int first = 0; first < V; first++)
@@ -55,14 +49,8 @@ TravellingSalesmanProblem::TravellingSalesmanProblem(std::string src)
     {
         file >> V;
 
-        array = new int* [V];
-
-        for (int i = 0; i < V; i++)
-            array[i] = new int[V];
-
-        for (int i = 0; i < V; i++)
-            for (int j = 0; j < V; j++)
-                array[i][j] = INT_MAX;
+        array.clear();
+        array.resize(V, std::vector<int>(V));
 
         int weight;
         for (int first = 0; first < V; first++)
@@ -79,7 +67,6 @@ TravellingSalesmanProblem::TravellingSalesmanProblem(std::string src)
     }
     else
     {
-        array = NULL;
         std::cout << "Error occurred!\n";
     }
 }
@@ -88,7 +75,7 @@ TravellingSalesmanProblem::~TravellingSalesmanProblem() {
 }
 
 void TravellingSalesmanProblem::bruteForce() {
-    if (array == NULL) {
+    if (array.empty() == true) {
         std::cout << "Array is empty!\n";
         return;
     }
@@ -137,7 +124,7 @@ void TravellingSalesmanProblem::bruteForce() {
 }
 
 void TravellingSalesmanProblem::bruteForce_test() {
-    if (array == NULL) {
+    if (array.empty() == true) {
         std::cout << "Array is empty!\n";
         return;
     }
@@ -175,7 +162,7 @@ void TravellingSalesmanProblem::bruteForce_test() {
 }
 
 void TravellingSalesmanProblem::littleAlgorithm() {
-    if (array == NULL) {
+    if (array.empty() == true) {
         std::cout << "Array is empty!\n";
         return;
     }
@@ -188,214 +175,230 @@ void TravellingSalesmanProblem::littleAlgorithm() {
     std::vector<int> aFactor;
     std::vector<int> bFactor;
 
+    // stworzenie kolejki
+    std::queue<std::vector<std::vector<int>>> queue;
+
+    // zaladowanie obecnej macierzy do kolejki
+    queue.push(array);
+
     int min = INT_MAX;
 
     int lowerBound = 0;
 
-    for (int N = V; N > 0; N--) {
-        for (int row = 0; row < V; row++) {
-            for (int column = 0; column < V; column++) {
-                // szukamy minimum dla RZÊDU
-                if (array[row][column] < min && row != column && array[row][column] != -1) {
-                    min = array[row][column];
-                }
-            }
-            // dodajemy minimum do tablicy wspó³cz. a
-            aFactor.emplace_back(min);
-            //std::cout << "a" << row << " " << min << std::endl;
-            // ponowne ustalenie minimum
-            min = INT_MAX;
-        }
-
-        // 1. krok do stworzenia C' - odjêcie od C wspó³czynnika a
-        for (int row = 0; row < V; row++) {
-            for (int column = 0; column < V; column++) {
-                // Cij - ai
-                if (row != column && array[row][column] != -1) {
-                    array[row][column] -= aFactor.at(row);
-                }
-            }
-        }
-
-        //print();
-
-        for (int column = 0; column < V; column++) {
+    while (queue.empty() != true) {
+        //for (int N = V; N > 0; N--) {
             for (int row = 0; row < V; row++) {
-                // szukamy minimum dla KOLUMNY
-                if (array[row][column] < min && row != column && array[row][column] != -1) {
-                    min = array[row][column];
+                for (int column = 0; column < V; column++) {
+                    // szukamy minimum dla RZÊDU
+                    if (array[row][column] < min && row != column && array[row][column] != -1) {
+                        min = array[row][column];
+                    }
                 }
+                // dodajemy minimum do tablicy wspó³cz. a
+                aFactor.emplace_back(min);
+                //std::cout << "a" << row << " " << min << std::endl;
+                // ponowne ustalenie minimum
+                min = INT_MAX;
             }
-            // dodajemy minimum do tablicy wspó³cz. a
-            bFactor.emplace_back(min);
-            //std::cout << "b" << column << " " << min << std::endl;
-            // ponowne ustalenie minimum
-            min = INT_MAX;
-        }
 
-        // 2. krok do stworzenia C' - odjêcie od C wspó³czynnika b
-        for (int column = 0; column < V; column++) {
+            // 1. krok do stworzenia C' - odjêcie od C wspó³czynnika a
             for (int row = 0; row < V; row++) {
-                // Cij - bi
-                if (column != row && array[column][row] != -1) {
-                    array[column][row] -= bFactor.at(row);
+                for (int column = 0; column < V; column++) {
+                    // Cij - ai
+                    if (row != column && array[row][column] != -1) {
+                        array[row][column] -= aFactor.at(row);
+                    }
                 }
             }
-        }
 
-        //print();
+            //print();
 
-        // obliczenie dolnego oszacowania dla wszystkich rozwi¹zañ
-        for (int i = 0; i < V; i++) {
-            if (aFactor[i] == INT_MAX) {
-                lowerBound += 0;
-            }
-            else {
-                lowerBound += aFactor[i];
-            }
-            if (bFactor[i] == INT_MAX) {
-                lowerBound += 0;
-            }
-            else {
-                lowerBound += bFactor[i];
-            }
-        }
-
-        //std::cout << "Lower bound on all tours: " << lowerBound << std::endl;
-
-        // wyczyszczenie tablic wektorowych
-        aFactor.clear();
-        bFactor.clear();
-
-        // stworzenie macierzy kosztów rezygnacji dla tras "zerowych"
-        std::vector<std::vector<int>> resignationArray(V, std::vector<int>(V, -1));
-        for (int row = 0; row < V; row++) {
             for (int column = 0; column < V; column++) {
-                if (array[row][column] == 0 && row != column && array[row][column] != -1) {
-                    int minRow = INT_MAX;
-                    int minColumn = INT_MAX;
-                    for (int i = 0; i < V; i++) {
-                        if (array[row][i] < minRow && i != column && array[row][i] != -1) {
-                            minRow = array[row][i];
+                for (int row = 0; row < V; row++) {
+                    // szukamy minimum dla KOLUMNY
+                    if (array[row][column] < min && row != column && array[row][column] != -1) {
+                        min = array[row][column];
+                    }
+                }
+                // dodajemy minimum do tablicy wspó³cz. a
+                bFactor.emplace_back(min);
+                //std::cout << "b" << column << " " << min << std::endl;
+                // ponowne ustalenie minimum
+                min = INT_MAX;
+            }
+
+            // 2. krok do stworzenia C' - odjêcie od C wspó³czynnika b
+            for (int column = 0; column < V; column++) {
+                for (int row = 0; row < V; row++) {
+                    // Cij - bi
+                    if (column != row && array[column][row] != -1) {
+                        array[column][row] -= bFactor.at(row);
+                    }
+                }
+            }
+
+            //print();
+
+            // obliczenie dolnego oszacowania dla wszystkich rozwi¹zañ
+            for (int i = 0; i < V; i++) {
+                if (aFactor[i] == INT_MAX) {
+                    lowerBound += 0;
+                }
+                else {
+                    lowerBound += aFactor[i];
+                }
+                if (bFactor[i] == INT_MAX) {
+                    lowerBound += 0;
+                }
+                else {
+                    lowerBound += bFactor[i];
+                }
+            }
+
+            //std::cout << "Lower bound on all tours: " << lowerBound << std::endl;
+
+            // wyczyszczenie tablic wektorowych
+            aFactor.clear();
+            bFactor.clear();
+
+            // stworzenie macierzy kosztów rezygnacji dla tras "zerowych"
+            std::vector<std::vector<int>> resignationArray(V, std::vector<int>(V, -1));
+            for (int row = 0; row < V; row++) {
+                for (int column = 0; column < V; column++) {
+                    if (array[row][column] == 0 && row != column && array[row][column] != -1) {
+                        int minRow = INT_MAX;
+                        int minColumn = INT_MAX;
+                        for (int i = 0; i < V; i++) {
+                            if (array[row][i] < minRow && i != column && array[row][i] != -1) {
+                                minRow = array[row][i];
+                            }
+                        }
+                        for (int j = 0; j < V; j++) {
+                            if (array[j][column] < minColumn && j != row && array[j][column] != -1) {
+                                minColumn = array[j][column];
+                            }
+                        }
+                        if ((minRow != INT_MAX && minColumn != INT_MAX) && (minRow != 0 || minColumn != 0)) {
+                            resignationArray[row][column] = minRow + minColumn;
+                        }
+                        // jesli minRow == INT_MAX && minColumn != INT_MAX && minColumn!= 0
+                        else if (minRow == INT_MAX && minColumn != INT_MAX && minColumn != 0) {
+                            resignationArray[row][column] = minColumn;
+                        }
+                        // jesli minColumn == INT_MAX && minRow != INT_MAX && minRow!= 0
+                        else if (minColumn == INT_MAX && minRow != INT_MAX && minRow != 0) {
+                            resignationArray[row][column] = minRow;
+                        }
+                        // jesli zero w (k, l) ma w obu minimach zero, œwiadczy to ¿e jest ono podcyklem tamtych zer
+                        else if (minRow == 0 && minColumn == 0) {
+                            resignationArray[row][column] = -1;
+                        }
+                        // kwestia czy "nieskonczonosc" + 0 powinno dawac 0
+                        else if ((minRow == INT_MAX && minColumn == 0) || (minRow == 0 && minColumn == INT_MAX)) {
+                            resignationArray[row][column] = 0;
+                        }
+                        // jesli zero nie ma zadnego minimum, to jest ono ostatnim zerem, które zamyka nam cykl hamiltona
+                        else if (minRow == INT_MAX && minColumn == INT_MAX) {
+                            resignationArray[row][column] = 0;
                         }
                     }
-                    for (int j = 0; j < V; j++) {
-                        if (array[j][column] < minColumn && j != row && array[j][column] != -1) {
-                            minColumn = array[j][column];
-                        }
-                    }
-                    if ((minRow != INT_MAX && minColumn != INT_MAX) && (minRow != 0 || minColumn != 0)) {
-                        resignationArray[row][column] = minRow + minColumn;
-                    }
-                    // jesli minRow == INT_MAX && minColumn != INT_MAX && minColumn!= 0
-                    else if (minRow == INT_MAX && minColumn != INT_MAX && minColumn != 0) {
-                        resignationArray[row][column] = minColumn;
-                    }
-                    // jesli minColumn == INT_MAX && minRow != INT_MAX && minRow!= 0
-                    else if (minColumn == INT_MAX && minRow != INT_MAX && minRow != 0) {
-                        resignationArray[row][column] = minRow;
-                    }
-                    // jesli zero w (k, l) ma w obu minimach zero, œwiadczy to ¿e jest ono podcyklem tamtych zer
-                    else if (minRow == 0 && minColumn == 0) {
-                        resignationArray[row][column] = -1;
-                    }
-                    // kwestia czy "nieskonczonosc" + 0 powinno dawac 0
-                    else if ((minRow == INT_MAX && minColumn == 0) || (minRow == 0 && minColumn == INT_MAX)){
-                        resignationArray[row][column] = 0;
-                    }
-                    // jesli zero nie ma zadnego minimum, to jest ono ostatnim zerem, które zamyka nam cykl hamiltona
-                    else if (minRow == INT_MAX && minColumn == INT_MAX) {
-                        resignationArray[row][column] = 0;
+                }
+            }
+
+            // sprawdzenie poprawnosci macierzy rezygnacji
+            //std::cout << "Resignation Matrix: " << std::endl;
+            //for (int i = 0; i < V; i++) {
+            //    for (int j = 0; j < V; j++) {
+            //       std::cout << resignationArray[i][j] << " ";
+            //    }
+            //    std::cout << std::endl;
+            //}
+
+            // znalezienie d(kl) dla macierzy rezygnacji
+            int d_kl = -1;
+            // od razu zapisujemy row i column które bêd¹ wykreœlane z macierzy
+            int k, l;
+            for (int row = 0; row < V; row++) {
+                for (int column = 0; column < V; column++) {
+                    if (resignationArray[row][column] >= d_kl && resignationArray[row][column] != -1 && row != column) {
+                        d_kl = resignationArray[row][column];
+                        k = row;
+                        l = column;
                     }
                 }
             }
-        }
+            //std::cout << "d_kl = " << d_kl << std::endl;
 
-        // sprawdzenie poprawnosci macierzy rezygnacji
-        //std::cout << "Resignation Matrix: " << std::endl;
-        //for (int i = 0; i < V; i++) {
-        //    for (int j = 0; j < V; j++) {
-        //       std::cout << resignationArray[i][j] << " ";
-        //    }
-        //    std::cout << std::endl;
+            // sprawdzenie warunku koñcowego d_kl == 0
+            if (d_kl == -1) {
+                // usuniêcie z kolejki pierwszego elementu i sprawdzenie kolejnej macierzy
+                queue.pop();
+                if (queue.empty() == true) {
+                    break;
+                }
+                else {
+                    array = queue.front();
+                }
+            }
+
+            visitedRow.push_back(k);
+            visitedColumn.push_back(l);
+
+            // obliczenie dolnej granicy dla K2
+            int lowerBound_K2 = lowerBound + d_kl;
+
+            std::vector<std::vector<int>> cloneArray(V, std::vector<int>(V, -1));
+
+            // sprawdzenie czy mo¿e istnieæ optymalniejsza œcie¿ka
+            if (lowerBound_K2 < lowerBound) {
+                // przepisanie obecnego arraya
+                for (int row = 0; row < V; row++) {
+                    for (int column = 0; column < V; column++) {
+                        cloneArray[row][column] = array[row][column];
+                    }
+                }
+                // wrzucamy do kolejki kolejn¹ macierz do sprawdzenia
+                queue.push(cloneArray);
+            }
+
+            // tworzymy macierz zredukowan¹ C1
+            // najpierw usuwamy rz¹d
+            for (int i = 0; i < V; i++) {
+                array[k][i] = -1;
+            }
+            // potem kolumnê
+            for (int j = 0; j < V; j++) {
+                array[j][l] = -1;
+            }
+
+            // usuwamy podcykle dla obecnych tras
+            int rightNeighbour, leftNeighbour;
+            for (int v = 0; v < V; v++) {
+                for (int i = 0; i < visitedRow.size(); i++) {
+                    if (visitedRow[i] == v) {
+                        for (int j = 0; j < visitedColumn.size(); j++) {
+                            if (visitedColumn[j] == v) {
+                                rightNeighbour = visitedColumn[i];
+                                leftNeighbour = visitedRow[j];
+
+                                array[rightNeighbour][leftNeighbour] = -1;
+                                array[leftNeighbour][rightNeighbour] = -1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // blokujemy podcykl tej samej œcie¿ki
+            array[l][k] = -1;
+
+            //print();
         //}
-
-        // znalezienie d(kl) dla macierzy rezygnacji
-        int d_kl = -1;
-        // od razu zapisujemy row i column które bêd¹ wykreœlane z macierzy
-        int k, l;
-        for (int row = 0; row < V; row++) {
-            for (int column = 0; column < V; column++) {
-                if (resignationArray[row][column] >= d_kl && resignationArray[row][column] != -1 && row != column) {
-                    d_kl = resignationArray[row][column];
-                    k = row;
-                    l = column;
-                }
-            }
-        }
-        //std::cout << "d_kl = " << d_kl << std::endl;
-
-        visitedRow.push_back(k);
-        visitedColumn.push_back(l);
-
-        // sprawdzenie warunku koñcowego d_kl == 0
-        if (d_kl == -1) {
-            std::cout << "The row path:    ";
-            for (int i = 0; i < V; i++) {
-                std::cout << visitedRow[i] << " ";
-            }
-            std::cout << std::endl;
-
-            std::cout << "The column path: ";
-            for (int i = 0; i < V; i++) {
-                std::cout << visitedColumn[i] << " ";
-            }
-            std::cout << std::endl;
-
-            std::cout << "Total minimum cost: " << lowerBound << std::endl;
-            return;
-        }
-
-        // obliczenie dolnej granicy dla K2
-        int lowerBound_K2 = lowerBound + d_kl;
-
-        // tworzymy macierz zredukowan¹ C1
-        // najpierw usuwamy rz¹d
-        for (int i = 0; i < V; i++) {
-            array[k][i] = -1;
-        }
-        // potem kolumnê
-        for (int j = 0; j < V; j++) {
-            array[j][l] = -1;
-        }
-
-        // usuwamy podcykle dla obecnych tras
-        int rightNeighbour, leftNeighbour;
-        for (int v = 0; v < V; v++) {
-            for (int i = 0; i < visitedRow.size(); i++) {
-                if (visitedRow[i] == v) {
-                    for (int j = 0; j < visitedColumn.size(); j++) {
-                        if (visitedColumn[j] == v) {
-                            rightNeighbour = visitedColumn[i];
-                            leftNeighbour = visitedRow[j];
-
-                            array[rightNeighbour][leftNeighbour] = -1;
-                            array[leftNeighbour][rightNeighbour] = -1;
-                        }
-                    }
-                }
-            }
-        }
-
-        // blokujemy podcykl tej samej œcie¿ki
-        array[l][k] = -1;
-
-        //print();
     }
 
     // algorytm na wytyczenie œcie¿ki z par szlaków miêdzy wierzcho³kami
     std::vector<int> path;
-    int lastNeighbour;
+    int lastNeighbour = -1;
     for (int v = 0; v < V; v++) {
         for (int i = 0; i < visitedRow.size(); i++) {
             if (visitedRow[i] == 0 && v == 0) {
@@ -441,7 +444,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
 }
 
 void TravellingSalesmanProblem::littleAlgorithm_test() {
-    if (array == NULL) {
+    if (array.empty() == true) {
         std::cout << "Array is empty!\n";
         return;
     }
@@ -632,7 +635,7 @@ void TravellingSalesmanProblem::littleAlgorithm_test() {
 
 void TravellingSalesmanProblem::print()
 {
-    if (array == NULL) {
+    if (array.empty() == true) {
         std::cout << "Array is empty!\n";
         return;
     }
