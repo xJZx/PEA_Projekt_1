@@ -7,7 +7,7 @@ private:
 	// ilosc wierzcholkow
 	int V;
 	// macierz s¹siedztwa, graf pe³ny, skierowany
-	std::vector<std::vector<int>> array;
+	std::vector<std::vector<int>> matrix;
 	
 public:
 	TravellingSalesmanProblem(int, int, int);
