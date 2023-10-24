@@ -8,6 +8,11 @@ private:
 	int V;
 	// macierz s¹siedztwa, graf pe³ny, skierowany
 	std::vector<std::vector<int>> matrix;
+
+	// macierz wag dla dynamicznego
+	std::vector<std::vector<int>> dp;
+	// macierz trasy dla dynamicznego
+	std::vector<int> pathDynamic;
 	
 public:
 	TravellingSalesmanProblem(int, int, int);
@@ -17,7 +22,7 @@ public:
 	void bruteForce();
 	void littleAlgorithm();
 	void dynamicProgramming();
-	int dynamicProgrammingRecursion(int, int, std::vector<std::vector<int>>, std::vector<int>);
+	int dynamicProgrammingRecursion(int, int);
 
 	void bruteForce_test();
 	void littleAlgorithm_test();

@@ -661,25 +661,27 @@ void TravellingSalesmanProblem::littleAlgorithm_test() {
 void TravellingSalesmanProblem::dynamicProgramming()
 {
     // tablica 2^n, V, wype³nienie jej -1
-    std::vector<std::vector<int>> dp(1 << V, std::vector<int>(V, -1));
+    dp.clear();
+    dp.resize(1 << V, std::vector<int>(V, -1));
     // tablica dla œcie¿ki
-    std::vector<int> path;
 
-    std::cout << "Cost of the path: " << dynamicProgrammingRecursion(1, 0, dp, path) << std::endl;
+    pathDynamic.push_back(0);
 
-    for (int i = 0; i < path.size(); i++) {
-        std::cout << path[i] << " ";
+    std::cout << "Cost of the path: " << dynamicProgrammingRecursion(1, 0) << std::endl;
+
+    for (int i = 0; i < pathDynamic.size(); i++) {
+        std::cout << pathDynamic[i] << " ";
     }
     std::cout << std::endl;
     
 }
 
-int TravellingSalesmanProblem::dynamicProgrammingRecursion(int mask, int pos, std::vector<std::vector<int>> dp, std::vector<int> path)
+int TravellingSalesmanProblem::dynamicProgrammingRecursion(int mask, int pos)
 {
     // sprawdzenie czy wszystkie miasta by³y ju¿ odwiedzone
     // 1 << V, to inaczej 2^V (operacje bitowe)
     if (mask == (1 << V) - 1) {
-        path.push_back(0);
+        pathDynamic.push_back(pos);
         return matrix[pos][0];
     }
 
@@ -693,16 +695,18 @@ int TravellingSalesmanProblem::dynamicProgrammingRecursion(int mask, int pos, st
     // odwiedzenie nieodwiedzonych miast i znalezienie najkrótszej œcie¿ki
     for (int city = 0; city < V; city++) {
         if ((mask & (1 << city)) == 0) {
-            int newMinCost = matrix[pos][city] + dynamicProgrammingRecursion(mask | (1 << city), city, dp, path);
-            //ans = std::min(ans, newAns);
+            int newMinCost = matrix[pos][city] + dynamicProgrammingRecursion(mask | (1 << city), city);
+            //minCost = std::min(minCost, newMinCost);
             if (newMinCost < minCost) {
                 minCost = newMinCost;
-                path.insert(path.begin(), city);
+                //pathDynamic.push_back(city);
             }
         }
     }
 
-    return dp[mask][pos] = minCost;
+    dp[mask][pos] = minCost;
+
+    return minCost;
 }
 
 
