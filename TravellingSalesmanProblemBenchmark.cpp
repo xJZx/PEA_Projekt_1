@@ -19,6 +19,9 @@ TravellingSalesmanProblemBenchmark::TravellingSalesmanProblemBenchmark(std::stri
     else if (type == "little") {
         test_littleAlgorithm(src);
     }
+    //else if (type == "dynamic") {
+    //    test_dynamicProgramming(src);
+    //}
 }
 
 // iloœæ powtórzeñ

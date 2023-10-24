@@ -16,9 +16,12 @@ public:
 
 	void bruteForce();
 	void littleAlgorithm();
+	void dynamicProgramming();
+	int dynamicProgrammingRecursion(int, int, std::vector<std::vector<int>>, std::vector<int>);
 
 	void bruteForce_test();
 	void littleAlgorithm_test();
+	void dynamicProgramming_test();
 
 	void print();
 	void saveToFile();

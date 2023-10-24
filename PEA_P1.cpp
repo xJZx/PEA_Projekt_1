@@ -18,6 +18,7 @@ int main()
         std::cout << "3. Show last\n";
         std::cout << "4. Brute Force\n";
         std::cout << "5. Little's Algorithm\n";
+        std::cout << "6. Dynamic Programming\n";
         std::cin >> creation;
 
         switch (creation) {
@@ -79,6 +80,17 @@ int main()
 
             delete travellingSalesmanProblem;
             delete travellingSalesmanProblemBenchmark;
+        }
+        break;
+
+        case 6:
+        {
+            TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(lastFilename);
+            travellingSalesmanProblem->dynamicProgramming();
+            //TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(lastFilename, "dynamic");
+
+            delete travellingSalesmanProblem;
+            //delete travellingSalesmanProblemBenchmark;
         }
         break;
 
