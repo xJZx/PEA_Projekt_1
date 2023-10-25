@@ -664,13 +664,16 @@ void TravellingSalesmanProblem::dynamicProgramming()
     dp.clear();
     dp.resize(1 << V, std::vector<int>(V, -1));
     // tablica dla œcie¿ki
-
+    pathDynamic.clear();
+    pathDynamic.resize(1 << V, -1);
     pathDynamic.push_back(0);
 
     std::cout << "Cost of the path: " << dynamicProgrammingRecursion(1, 0) << std::endl;
 
     for (int i = 0; i < pathDynamic.size(); i++) {
-        std::cout << pathDynamic[i] << " ";
+        if (pathDynamic[i] != -1){
+            std::cout << pathDynamic[i] << " ";
+        }
     }
     std::cout << std::endl;
     
@@ -681,7 +684,7 @@ int TravellingSalesmanProblem::dynamicProgrammingRecursion(int mask, int pos)
     // sprawdzenie czy wszystkie miasta by³y ju¿ odwiedzone
     // 1 << V, to inaczej 2^V (operacje bitowe)
     if (mask == (1 << V) - 1) {
-        pathDynamic.push_back(pos);
+        pathDynamic.insert(pathDynamic.begin() + mask, pos);
         return matrix[pos][0];
     }
 
