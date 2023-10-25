@@ -19,9 +19,9 @@ TravellingSalesmanProblemBenchmark::TravellingSalesmanProblemBenchmark(std::stri
     else if (type == "little") {
         test_littleAlgorithm(src);
     }
-    //else if (type == "dynamic") {
-    //    test_dynamicProgramming(src);
-    //}
+    else if (type == "dynamic") {
+        test_dynamicProgramming(src);
+    }
 }
 
 // iloœæ powtórzeñ
@@ -81,4 +81,32 @@ void TravellingSalesmanProblemBenchmark::test_littleAlgorithm(std::string src) {
     }
 
     std::cout << "TSP Little's Algorithm average time: " << result / N << "[us]" << std::endl;
+}
+
+void TravellingSalesmanProblemBenchmark::test_dynamicProgramming(std::string src) {
+
+    int results[N];
+
+    for (int i = 0; i < N; i++)
+    {
+        TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(src);
+
+        long long int frequency, start, end, elapsed;
+        QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
+
+        start = read_QPC();
+        travellingSalesmanProblem->dynamicProgramming_test();
+        end = read_QPC();
+
+        elapsed = end - start;
+        // przez 1000, aby byly milisekundy
+        results[i] = 1000000.0 * elapsed / frequency;
+    }
+    int result = 0;
+    for (int i = 0; i < N; i++)
+    {
+        result += results[i];
+    }
+
+    std::cout << "TSP Dynamic Programming average time: " << result / N << "[us]" << std::endl;
 }

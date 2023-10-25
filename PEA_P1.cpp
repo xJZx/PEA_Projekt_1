@@ -87,10 +87,10 @@ int main()
         {
             TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(lastFilename);
             travellingSalesmanProblem->dynamicProgramming();
-            //TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(lastFilename, "dynamic");
+            TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(lastFilename, "dynamic");
 
             delete travellingSalesmanProblem;
-            //delete travellingSalesmanProblemBenchmark;
+            delete travellingSalesmanProblemBenchmark;
         }
         break;
 

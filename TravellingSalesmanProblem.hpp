@@ -12,7 +12,7 @@ private:
 	// macierz wag dla dynamicznego
 	std::vector<std::vector<int>> dp;
 	// macierz trasy dla dynamicznego
-	std::vector<int> pathDynamic;
+	std::vector<std::vector<int>> parents;
 	
 public:
 	TravellingSalesmanProblem(int, int, int);

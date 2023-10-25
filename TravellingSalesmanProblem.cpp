@@ -664,16 +664,36 @@ void TravellingSalesmanProblem::dynamicProgramming()
     dp.clear();
     dp.resize(1 << V, std::vector<int>(V, -1));
     // tablica dla œcie¿ki
-    pathDynamic.clear();
-    pathDynamic.resize(1 << V, -1);
-    pathDynamic.push_back(0);
+    parents.clear();
+    parents.resize(1 << V, std::vector<int>(V, -1));
+    //parents.push_back(0);
 
     std::cout << "Cost of the path: " << dynamicProgrammingRecursion(1, 0) << std::endl;
 
-    for (int i = 0; i < pathDynamic.size(); i++) {
-        if (pathDynamic[i] != -1){
-            std::cout << pathDynamic[i] << " ";
+    // startujemy odwzorowywaæ œcie¿kê w tym samym punkcie startowym, w którym zaczêliœmy algorytm
+    int mask = 1;
+    int pos = 0;
+    std::vector<int> path;
+    path.push_back(0);
+
+    while (mask) {
+        // jeœli obecny rodzic bêdzie równy -1, to znaczy ¿e wyznaczyliœmy ju¿ ca³¹ œcie¿kê
+        if (parents[mask][pos] != -1){
+            int prev_pos = parents[mask][pos];
+            path.push_back(prev_pos);
+            mask = mask | (1 << prev_pos);
+            pos = prev_pos;
         }
+        else {
+            break;
+        } 
+    }
+
+    path.push_back(0);
+
+    std::cout << "Best trip: ";
+    for (int i = 0; i < path.size(); i++) {
+        std::cout << path[i] << " ";
     }
     std::cout << std::endl;
     
@@ -684,7 +704,6 @@ int TravellingSalesmanProblem::dynamicProgrammingRecursion(int mask, int pos)
     // sprawdzenie czy wszystkie miasta by³y ju¿ odwiedzone
     // 1 << V, to inaczej 2^V (operacje bitowe)
     if (mask == (1 << V) - 1) {
-        pathDynamic.insert(pathDynamic.begin() + mask, pos);
         return matrix[pos][0];
     }
 
@@ -703,6 +722,7 @@ int TravellingSalesmanProblem::dynamicProgrammingRecursion(int mask, int pos)
             if (newMinCost < minCost) {
                 minCost = newMinCost;
                 //pathDynamic.push_back(city);
+                parents[mask][pos] = city;
             }
         }
     }
@@ -710,6 +730,39 @@ int TravellingSalesmanProblem::dynamicProgrammingRecursion(int mask, int pos)
     dp[mask][pos] = minCost;
 
     return minCost;
+}
+
+void TravellingSalesmanProblem::dynamicProgramming_test() {
+    // tablica 2^n, V, wype³nienie jej -1
+    dp.clear();
+    dp.resize(1 << V, std::vector<int>(V, -1));
+    // tablica dla œcie¿ki
+    parents.clear();
+    parents.resize(1 << V, std::vector<int>(V, -1));
+    //parents.push_back(0);
+
+    dynamicProgrammingRecursion(1, 0);
+
+    // startujemy odwzorowywaæ œcie¿kê w tym samym punkcie startowym, w którym zaczêliœmy algorytm
+    int mask = 1;
+    int pos = 0;
+    std::vector<int> path;
+    path.push_back(0);
+
+    while (mask) {
+        // jeœli obecny rodzic bêdzie równy -1, to znaczy ¿e wyznaczyliœmy ju¿ ca³¹ œcie¿kê
+        if (parents[mask][pos] != -1) {
+            int prev_pos = parents[mask][pos];
+            path.push_back(prev_pos);
+            mask = mask | (1 << prev_pos);
+            pos = prev_pos;
+        }
+        else {
+            break;
+        }
+    }
+
+    path.push_back(0);
 }
 
 
