@@ -187,6 +187,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
 
     int lowerBound = INT_MAX;
     int lowerBound_K1 = 0;
+    int iteration = 0;
 
     while (queueMatrix.empty() != true) {
         //for (int N = V; N > 0; N--) {
@@ -199,7 +200,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                 }
                 // dodajemy minimum do tablicy wspó³cz. a
                 aFactor.emplace_back(min);
-                //std::cout << "a" << row << " " << min << std::endl;
+                std::cout << "a" << row << " " << min << std::endl;
                 // ponowne ustalenie minimum
                 min = INT_MAX;
             }
@@ -225,7 +226,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                 }
                 // dodajemy minimum do tablicy wspó³cz. a
                 bFactor.emplace_back(min);
-                //std::cout << "b" << column << " " << min << std::endl;
+                std::cout << "b" << column << " " << min << std::endl;
                 // ponowne ustalenie minimum
                 min = INT_MAX;
             }
@@ -240,7 +241,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                 }
             }
 
-            //print();
+            print();
 
             // obliczenie dolnego oszacowania dla wszystkich rozwi¹zañ
             for (int i = 0; i < V; i++) {
@@ -260,9 +261,38 @@ void TravellingSalesmanProblem::littleAlgorithm() {
 
             //std::cout << "Lower bound on all tours: " << lowerBound << std::endl;
 
+            // sprawdzenie czy wszystkie wspolczynniki sa rowne 0
+            bool isFactorZero = false;
+            for (int i = 0; i < aFactor.size(); i++) {
+                if ((aFactor[i] == 0 || aFactor[i] == INT_MAX) && (bFactor[i] == 0 || bFactor[i] == INT_MAX)) {
+                    isFactorZero = true;
+                }
+                else {
+                    isFactorZero = false;
+                    break;
+                }
+            }
+
+            // sprawdzenie czy matrix posiada jedynie 0 i -1
+            bool isMatrixZero = false;
+            for (int i = 0; i < V; i++) {
+                for (int j = 0; j < V; j++) {
+                    if (matrix[i][j] == -1 || matrix[i][j] == 0) {
+                        isMatrixZero = true;
+                    }
+                    else {
+                        isMatrixZero = false;
+                        break;
+                    }
+                } 
+            }
+
             // wyczyszczenie tablic wektorowych
             aFactor.clear();
             bFactor.clear();
+
+            // gdy wejdzie nowa macierz do kolejki
+            checkNewMatrix:
 
             // stworzenie macierzy kosztów rezygnacji dla tras "zerowych"
             std::vector<std::vector<int>> resignationArray(V, std::vector<int>(V, -1));
@@ -281,25 +311,41 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                                 minColumn = matrix[j][column];
                             }
                         }
+
+                        // dodatkowe warunki
                         if ((minRow != INT_MAX && minColumn != INT_MAX) && (minRow != 0 || minColumn != 0)) {
                             resignationArray[row][column] = minRow + minColumn;
                         }
                         // jesli minRow == INT_MAX && minColumn != INT_MAX && minColumn!= 0
-                        else if (minRow == INT_MAX && minColumn != INT_MAX && minColumn != 0) {
+                        // kwestia czy "nieskonczonosc" + 0 powinno dawac 0
+                        else if (minRow == INT_MAX && minColumn != INT_MAX /* && minColumn != 0*/) {
                             resignationArray[row][column] = minColumn;
                         }
                         // jesli minColumn == INT_MAX && minRow != INT_MAX && minRow!= 0
-                        else if (minColumn == INT_MAX && minRow != INT_MAX && minRow != 0) {
+                        // kwestia czy "nieskonczonosc" + 0 powinno dawac 0
+                        else if (minColumn == INT_MAX && minRow != INT_MAX /* && minRow != 0*/) {
                             resignationArray[row][column] = minRow;
                         }
                         // jesli zero w (k, l) ma w obu minimach zero, œwiadczy to ¿e jest ono podcyklem tamtych zer
+                        //else if (minRow == 0 && minColumn == 0) {
+                        //    if (isFactorZero  && isMatrixZero) {
+                        //        //matrix[row][column] = 0;
+                        //        //matrix[column][row] = -1;
+                        //        resignationArray[row][column] = 0;
+                        //        //resignationArray[column][row] = 0;
+                        //    }
+                        //    else {
+                        //        resignationArray[row][column] = -1;
+                        //        //resignationArray[column][row] = -1;
+                        //    }
+                        //}
                         else if (minRow == 0 && minColumn == 0) {
                             resignationArray[row][column] = -1;
                         }
                         // kwestia czy "nieskonczonosc" + 0 powinno dawac 0
-                        else if ((minRow == INT_MAX && minColumn == 0) || (minRow == 0 && minColumn == INT_MAX)) {
+                        /*else if ((minRow == INT_MAX && minColumn == 0) || (minRow == 0 && minColumn == INT_MAX)) {
                             resignationArray[row][column] = 0;
-                        }
+                        }*/
                         // jesli zero nie ma zadnego minimum, to jest ono ostatnim zerem, które zamyka nam cykl hamiltona
                         else if (minRow == INT_MAX && minColumn == INT_MAX) {
                             resignationArray[row][column] = 0;
@@ -309,13 +355,13 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
 
             // sprawdzenie poprawnosci macierzy rezygnacji
-            //std::cout << "Resignation Matrix: " << std::endl;
-            //for (int i = 0; i < V; i++) {
-            //    for (int j = 0; j < V; j++) {
-            //       std::cout << resignationArray[i][j] << " ";
-            //    }
-            //    std::cout << std::endl;
-            //}
+            std::cout << "Resignation Matrix: " << std::endl;
+            for (int i = 0; i < V; i++) {
+                for (int j = 0; j < V; j++) {
+                   std::cout << resignationArray[i][j] << " ";
+                }
+                std::cout << std::endl;
+            }
 
             // znalezienie d(kl) dla macierzy rezygnacji
             int d_kl = -1;
@@ -330,9 +376,9 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                     }
                 }
             }
-            //std::cout << "d_kl = " << d_kl << std::endl;
+            std::cout << "d_kl = " << d_kl << std::endl;
 
-            // sprawdzenie warunku koñcowego d_kl == 0
+            // sprawdzenie warunku koñcowego d_kl == -1
             if (d_kl == -1 || lowerBound_K1 > lowerBound) {
                 // zapisanie nowego lowerBound
                 if (lowerBound_K1 < lowerBound) {
@@ -345,13 +391,20 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                 if (queueMatrix.empty() == true) {
                     break;
                 }
-                // jesli kolejka kosztów jest mniejsza (lowerBound_K2 < lowerBound), to sprawdzamy kolejn¹ macierz
+                // jesli kolejka kosztów jest mniejsza (lowerBound_K2 < lowerBound), to sprawdzamy kolejn¹ macierz   
                 else if(queueCost.front() < lowerBound){
                     lowerBound_K1 = queueCost.front();
                     queueCost.pop();
                     matrix = queueMatrix.front();
+                    visitedRow.push_back(-1);
+                    visitedColumn.push_back(-1);
                     // i idziemy do nowej iteracji pêtli
-                    continue;
+                    if (iteration == 0) {
+                        goto checkNewMatrix;
+                    }
+                    else {
+                        continue;
+                    }
                 }
                 else if (queueCost.front() > lowerBound) {
                     queueCost.pop();
@@ -360,31 +413,46 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                 else if (queueCost.front() == lowerBound) {
                     queueCost.pop();
                     matrix = queueMatrix.front();
-                    continue;
+                    visitedRow.push_back(-1);
+                    visitedColumn.push_back(-1);
+                    // i idziemy do nowej iteracji pêtli
+                    if (iteration == 0) {
+                        goto checkNewMatrix;
+                    }
+                    else {
+                        continue;
+                    }
                 }
             }
+            else {
+                visitedRow.push_back(k);
+                visitedColumn.push_back(l);
 
-            visitedRow.push_back(k);
-            visitedColumn.push_back(l);
-
-            // obliczenie dolnej granicy dla K2
-            int lowerBound_K2 = lowerBound_K1 + d_kl;
-
-            std::vector<std::vector<int>> cloneArray(V, std::vector<int>(V, -1));
-
-            // sprawdzenie czy mo¿e istnieæ optymalniejsza œcie¿ka
-            // przepisanie obecnego arraya
-            for (int row = 0; row < V; row++){
-                for (int column = 0; column < V; column++) {
-                     cloneArray[row][column] = matrix[row][column];
+                // obliczenie dolnej granicy dla K2
+                int lowerBound_K2;
+                if (iteration == 0) {
+                    lowerBound_K2 = lowerBound_K1;
                 }
+                else {
+                    lowerBound_K2 = lowerBound_K1 + d_kl;
+                }
+
+                std::vector<std::vector<int>> cloneArray(V, std::vector<int>(V, -1));
+
+                // sprawdzenie czy mo¿e istnieæ optymalniejsza œcie¿ka
+                // przepisanie obecnego arraya
+                for (int row = 0; row < V; row++) {
+                    for (int column = 0; column < V; column++) {
+                        cloneArray[row][column] = matrix[row][column];
+                    }
+                }
+                // usuwamy mozliwosc wybrania k, l dla K2
+                cloneArray[k][l] = -1;
+                // wrzucamy do kolejki kolejn¹ macierz do sprawdzenia
+                queueMatrix.push(cloneArray);
+                // oraz odpowiadaj¹cy jej koszt
+                queueCost.push(lowerBound_K2);
             }
-            // usuwamy mozliwosc wybrania k, l dla K2
-            cloneArray[k][l] = -1;
-            // wrzucamy do kolejki kolejn¹ macierz do sprawdzenia
-            queueMatrix.push(cloneArray);
-            // oraz odpowiadaj¹cy jej koszt
-            queueCost.push(lowerBound_K2);
 
             // tworzymy macierz zredukowan¹ C1
             // najpierw usuwamy rz¹d
@@ -397,7 +465,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
 
             // usuwamy podcykle dla obecnych tras
-            int rightNeighbour, leftNeighbour;
+            /*int rightNeighbour, leftNeighbour;
             for (int v = 0; v < V; v++) {
                 for (int i = 0; i < visitedRow.size(); i++) {
                     if (visitedRow[i] == v) {
@@ -412,12 +480,14 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                         }
                     }
                 }
-            }
+            }*/
 
             // blokujemy podcykl tej samej œcie¿ki
             matrix[l][k] = -1;
 
-            //print();
+            print();
+
+            iteration++;
         //}
     }
 
@@ -426,20 +496,25 @@ void TravellingSalesmanProblem::littleAlgorithm() {
     int lastNeighbour = -1;
     for (int v = 0; v < V; v++) {
         for (int i = 0; i < visitedRow.size(); i++) {
-            if (visitedRow[i] == 0 && v == 0) {
-                path.push_back(visitedRow[i]);
-                path.push_back(visitedColumn[i]);
-                lastNeighbour = visitedColumn[i];
+            if (visitedRow[i] == -1 && visitedColumn[i] == -1) {
+                break;
             }
-            else if (visitedRow[i] == lastNeighbour) {
-                path.push_back(visitedColumn[i]);
-                lastNeighbour = visitedColumn[i];
-                if (path[0] == lastNeighbour) {
-                    break;
+            else {
+                if (visitedRow[i] == 0 && v == 0) {
+                    path.push_back(visitedRow[i]);
+                    path.push_back(visitedColumn[i]);
+                    lastNeighbour = visitedColumn[i];
                 }
-            }
+                else if (visitedRow[i] == lastNeighbour) {
+                    path.push_back(visitedColumn[i]);
+                    lastNeighbour = visitedColumn[i];
+                    if (path[0] == lastNeighbour) {
+                        break;
+                    }
+                }
+            }   
         }
-        if (path[0] == lastNeighbour) {
+        if (path.empty() || lastNeighbour == 0) {
             break;
         }
     }

@@ -79,5 +79,14 @@
     <Text Include="tsp6_2.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="test9.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp5.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="test10.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
