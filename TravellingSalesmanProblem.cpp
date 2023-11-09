@@ -327,21 +327,23 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                             resignationArray[row][column] = minRow;
                         }
                         // jesli zero w (k, l) ma w obu minimach zero, œwiadczy to ¿e jest ono podcyklem tamtych zer
-                        //else if (minRow == 0 && minColumn == 0) {
-                        //    if (isFactorZero  && isMatrixZero) {
-                        //        //matrix[row][column] = 0;
-                        //        //matrix[column][row] = -1;
-                        //        resignationArray[row][column] = 0;
-                        //        //resignationArray[column][row] = 0;
-                        //    }
-                        //    else {
-                        //        resignationArray[row][column] = -1;
-                        //        //resignationArray[column][row] = -1;
-                        //    }
-                        //}
                         else if (minRow == 0 && minColumn == 0) {
-                            resignationArray[row][column] = -1;
+                            if (isFactorZero  && isMatrixZero) {
+                                //matrix[row][column] = 0;
+                                //matrix[column][row] = -1;
+                                resignationArray[row][column] = -1;
+                                //resignationArray[row][column] = 0;
+                                //resignationArray[column][row] = -1;
+                            }
+                            else {
+                                resignationArray[row][column] = 0;
+                                //resignationArray[row][column] = -1;
+                                //resignationArray[column][row] = 0;
+                            }
                         }
+                        /*else if (minRow == 0 && minColumn == 0) {
+                            resignationArray[row][column] = -1;
+                        }*/
                         // kwestia czy "nieskonczonosc" + 0 powinno dawac 0
                         /*else if ((minRow == INT_MAX && minColumn == 0) || (minRow == 0 && minColumn == INT_MAX)) {
                             resignationArray[row][column] = 0;
@@ -405,6 +407,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                     else {
                         continue;
                     }
+                    //goto checkNewMatrix;
                 }
                 else if (queueCost.front() > lowerBound) {
                     queueCost.pop();
@@ -422,6 +425,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                     else {
                         continue;
                     }
+                    //goto checkNewMatrix;
                 }
             }
             else {
@@ -448,6 +452,24 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                 }
                 // usuwamy mozliwosc wybrania k, l dla K2
                 cloneArray[k][l] = -1;
+
+                // usuwamy podcykle dla obecnych tras
+                int rightNeighbour, leftNeighbour;
+                for (int v = 0; v < V; v++) {
+                    for (int i = 0; i < visitedRow.size(); i++) {
+                        if (visitedRow[i] == v) {
+                            for (int j = 0; j < visitedColumn.size(); j++) {
+                                if (visitedColumn[j] == v) {
+                                    rightNeighbour = visitedColumn[i];
+                                    leftNeighbour = visitedRow[j];
+
+                                    cloneArray[rightNeighbour][leftNeighbour] = -1;
+                                    cloneArray[leftNeighbour][rightNeighbour] = -1;
+                                }
+                            }
+                        }
+                    }
+                }
                 // wrzucamy do kolejki kolejn¹ macierz do sprawdzenia
                 queueMatrix.push(cloneArray);
                 // oraz odpowiadaj¹cy jej koszt
@@ -465,7 +487,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
             }
 
             // usuwamy podcykle dla obecnych tras
-            /*int rightNeighbour, leftNeighbour;
+            int rightNeighbour, leftNeighbour;
             for (int v = 0; v < V; v++) {
                 for (int i = 0; i < visitedRow.size(); i++) {
                     if (visitedRow[i] == v) {
@@ -480,10 +502,13 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                         }
                     }
                 }
-            }*/
+            }
 
             // blokujemy podcykl tej samej œcie¿ki
             matrix[l][k] = -1;
+           /* for (int i = 0; i < V; i++) {
+                    matrix[i][k] = -1;
+            }*/
 
             print();
 
