@@ -91,5 +91,17 @@
     <Text Include="manual2.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="tsp17_1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp18.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp19.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tsp20.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

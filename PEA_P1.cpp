@@ -75,7 +75,7 @@ int main()
         case 5:
         {
             TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(lastFilename);
-            travellingSalesmanProblem->littleAlgorithm();
+            //travellingSalesmanProblem->littleAlgorithm();
             TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(lastFilename, "little");
 
             delete travellingSalesmanProblem;
