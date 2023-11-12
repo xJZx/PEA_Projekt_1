@@ -64,7 +64,7 @@ int main()
         case 4:
         {
             TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(lastFilename);
-            travellingSalesmanProblem->bruteForce();
+            //travellingSalesmanProblem->bruteForce();
             TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(lastFilename, "bruteForce");
 
             delete travellingSalesmanProblem;
@@ -75,7 +75,7 @@ int main()
         case 5:
         {
             TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(lastFilename);
-            travellingSalesmanProblem->littleAlgorithm();
+            //travellingSalesmanProblem->littleAlgorithm();
             TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(lastFilename, "little");
 
             delete travellingSalesmanProblem;
@@ -86,7 +86,7 @@ int main()
         case 6:
         {
             TravellingSalesmanProblem* travellingSalesmanProblem = new TravellingSalesmanProblem(lastFilename);
-            travellingSalesmanProblem->dynamicProgramming();
+            //travellingSalesmanProblem->dynamicProgramming();
             TravellingSalesmanProblemBenchmark* travellingSalesmanProblemBenchmark = new TravellingSalesmanProblemBenchmark(lastFilename, "dynamic");
 
             delete travellingSalesmanProblem;

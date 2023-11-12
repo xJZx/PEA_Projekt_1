@@ -44,7 +44,7 @@ void TravellingSalesmanProblemBenchmark::test_bruteForce(std::string src) {
 
         elapsed = end - start;
         // przez 1000, aby byly milisekundy
-        results[i] = 1000.0 * elapsed / frequency;
+        results[i] = 1000000.0 * elapsed / frequency;
     }
     int result = 0;
     for (int i = 0; i < N; i++)
@@ -52,7 +52,7 @@ void TravellingSalesmanProblemBenchmark::test_bruteForce(std::string src) {
         result += results[i];
     }
 
-    std::cout << "TSP Brute Force algorithm average time: " << result / N << "[ms]" << std::endl;
+    std::cout << "TSP Brute Force algorithm average time: " << result / N << "[us]" << std::endl;
 }
 
 void TravellingSalesmanProblemBenchmark::test_littleAlgorithm(std::string src) {
