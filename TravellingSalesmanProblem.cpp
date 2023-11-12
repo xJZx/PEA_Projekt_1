@@ -454,7 +454,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                 cloneArray[k][l] = -1;
 
                 // usuwamy podcykle dla obecnych tras
-                int rightNeighbour, leftNeighbour;
+                /*int rightNeighbour, leftNeighbour;
                 for (int v = 0; v < V; v++) {
                     for (int i = 0; i < visitedRow.size(); i++) {
                         if (visitedRow[i] == v) {
@@ -469,7 +469,7 @@ void TravellingSalesmanProblem::littleAlgorithm() {
                             }
                         }
                     }
-                }
+                }*/
                 // wrzucamy do kolejki kolejn¹ macierz do sprawdzenia
                 queueMatrix.push(cloneArray);
                 // oraz odpowiadaj¹cy jej koszt
@@ -900,6 +900,9 @@ void TravellingSalesmanProblem::littleAlgorithm_test() {
         iteration++;
         //}
     }
+    std::cout << std::endl;
+
+    std::cout << "Total minimum cost: " << lowerBound << std::endl;
 }
 
 // mask, to iloœæ bitów w jakiej znajduje siê miasto
